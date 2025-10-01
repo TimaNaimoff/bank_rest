@@ -3,6 +3,7 @@ package com.example.bankcards.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,4 +43,8 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> cards = new HashSet<>();
+
+   public Set<Role> getRole(){
+       return roles;
+   }
 }

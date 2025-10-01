@@ -1,1 +1,15 @@
-*.md
+/target/
+/dependency-reduced-pom.xml
+
+.idea/
+*.iml
+.vscode/
+
+*.log
+
+.DS_Store
+Thumbs.db
+
+*.env
+
+src/**/README_*.md

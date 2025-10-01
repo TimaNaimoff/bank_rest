@@ -7,6 +7,9 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:bank}
     password: ${SPRING_DATASOURCE_PASSWORD:bank_pass}
     driver-class-name: org.postgresql.Driver
+  jwt:
+    secret: "youCanntoHackMeKid123"
+    expiration: 86400000 # 24 часа (надо конкретизирвать)
 
   jpa:
     hibernate:

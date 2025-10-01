@@ -1,52 +1,33 @@
-# 
-# docker-compose.yml — определяет сервисы для разработки и тестирования.
-
-# Что нужно сделать:
-#  - Настроить сервисы для:
-#      - PostgreSQL (или MySQL) с начальной базой.
-#      - Приложения Spring Boot (если нужно).
-#  - Открыть нужные порты (например, 5432, 8080).
-#  - Настроить volume для хранения данных БД.
-
-
-version: '3.9'
+version: '3.8'
 
 services:
   db:
     image: postgres:15
-    container_name: bank_postgres
-    restart: unless-stopped
+    container_name: bank_db
     environment:
-      POSTGRES_USER: bank
-      POSTGRES_PASSWORD: bank_pass
-      POSTGRES_DB: bankdb
+      POSTGRES_DB: bank
+      POSTGRES_USER: bankuser
+      POSTGRES_PASSWORD: bankpass
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - banknet
+      - bank_db_data:/var/lib/postgresql/data
 
   app:
     build: .
     container_name: bank_app
-    restart: unless-stopped
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bankdb
-      SPRING_DATASOURCE_USERNAME: bank
-      SPRING_DATASOURCE_PASSWORD: bank_pass
-      SPRING_JPA_HIBERNATE_DDL_AUTO: none
-      JWT_SECRET: "devtok"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bank
+      SPRING_DATASOURCE_USERNAME: bankuser
+      SPRING_DATASOURCE_PASSWORD: bankpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      JWT_SECRET: youCannotHackMe100
+      JWT_EXPIRATION: 86400000 #24 часа поставил
     ports:
       - "8080:8080"
     depends_on:
       - db
-    networks:
-      - banknet
+    command: ["./mvnw", "spring-boot:run"]
 
 volumes:
-  db_data:
-
-networks:
-  banknet:
-    driver: bridge
+  bank_db_data:

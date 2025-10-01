@@ -1,1 +1,96 @@
-# Здесь будет OpenAPI описание всех доступных эндпоинтов и моделей данных.
+openapi: 3.0.3
+info:
+  title: Bank Card Management API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: User registered
+  /auth/login:
+    post:
+      summary: Login user and get JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /cards/{userId}:
+    get:
+      summary: Get all cards for user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of user cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardDto'
+components:
+  schemas:
+    AuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    CardDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        maskedNumber:
+          type: string
+        expiryDate:
+          type: string
+          format: date
+        status:
+          type: string
+        balance:
+          type: number
+          format: double
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
